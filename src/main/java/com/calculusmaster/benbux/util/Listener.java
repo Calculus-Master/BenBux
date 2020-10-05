@@ -5,10 +5,8 @@ import com.calculusmaster.benbux.commands.Leaderboard;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.StatusChangeEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +62,7 @@ public class Listener extends ListenerAdapter
 
                     Mongo.updateTimestamp(user, "work", event.getMessage().getTimeCreated());
                 }
-                else event.getChannel().sendMessage(user.getAsMention() + " can use this command in " + TimeUtils.timeLeft(userData, event, Global.CMD_WORK_COOLDOWN, "work")).queue();
+                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_WORK_COOLDOWN, "work")));
             }
             else if(Global.CMD_CRIME.contains(msg[0]))
             {
@@ -76,7 +74,7 @@ public class Listener extends ListenerAdapter
 
                     if(amount < 0) Mongo.updateTimestamp(user, "crime", event.getMessage().getTimeCreated());
                 }
-                else event.getChannel().sendMessage(user.getAsMention() + " can use this command in " + TimeUtils.timeLeft(userData, event, Global.CMD_CRIME_COOLDOWN, "crime")).queue();
+                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_CRIME_COOLDOWN, "crime")));
             }
             else if(Global.CMD_BAL.contains(msg[0]))
             {
@@ -88,12 +86,11 @@ public class Listener extends ListenerAdapter
 
                 if(msg.length > 1 && targetData.isEmpty()) reply(event, getReplyEmbed(user.getAsTag()));
                 else reply(event, getReplyEmbed(msg.length > 1 ? targetData.getString("username") : user.getAsTag(), "Cash: **" + (msg.length > 1 ? targetData.getInt("benbux") : userData.getInt("benbux")) + "** BenBux\nBank: **" + (msg.length > 1 ? targetData.getInt("bank") : userData.getInt("bank")) + "** BenBux"));
-                //event.getChannel().sendMessage(user.getAsMention() + " has " + userData.getInt("benbux") + " BenBux! Your bank contains " + userData.getInt("bank") + " BenBux!").queue();
             }
             else if(Global.CMD_DEPOSIT.contains(msg[0]))
             {
-                if(msg.length != 2) return;
-                if(userData.getInt("benbux") < 0) return;
+                if(msg.length != 2) reply(event, getReplyEmbed(user.getAsTag()));;
+                if(userData.getInt("benbux") < 0) reply(event, getReplyEmbed(user.getAsTag()));
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
@@ -109,7 +106,7 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_WITHDRAW.contains(msg[0]))
             {
-                if(msg.length != 2) return;
+                if(msg.length != 2) reply(event, getReplyEmbed(user.getAsTag()));;
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
@@ -129,11 +126,11 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_STEAL.contains(msg[0]))
             {
-                if(msg.length != 2) return;
+                if(msg.length != 2) reply(event, getReplyEmbed(user.getAsTag()));;
 
                 if(!TimeUtils.isOnCooldown(userData, event, Global.CMD_STEAL_COOLDOWN, "steal"))
                 {
-                    if(getUserIDFromMention(msg[1]).equals(user.getId())) return;
+                    if(getUserIDFromMention(msg[1]).equals(user.getId())) reply(event, getReplyEmbed(user.getAsTag()));;
 
                     JSONObject victimData = new JSONObject(Mongo.BenBuxDB.find(Filters.eq("userID", getUserIDFromMention(msg[1]))).first().toJson());
                     boolean canSteal = new Random().nextInt(100) < 40;
@@ -157,16 +154,16 @@ public class Listener extends ListenerAdapter
 
                     Mongo.updateTimestamp(user, "steal", event.getMessage().getTimeCreated());
                 }
-                else event.getChannel().sendMessage(user.getAsMention() + " can use this command in " + TimeUtils.timeLeft(userData, event, Global.CMD_STEAL_COOLDOWN, "steal")).queue();
+                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_STEAL_COOLDOWN, "steal")));
             }
             else if(Global.CMD_PAY.contains(msg[0]))
             {
-                if(msg.length != 3) return;
-                if(getUserIDFromMention(msg[1]).equals(user.getId())) return;
+                if(msg.length != 3) reply(event, getReplyEmbed(user.getAsTag()));;
+                if(getUserIDFromMention(msg[1]).equals(user.getId())) reply(event, getReplyEmbed(user.getAsTag()));;
 
                 JSONObject receiverData = new JSONObject(Mongo.BenBuxDB.find(Filters.eq("userID", getUserIDFromMention(msg[1]))).first().toJson());
 
-                if(receiverData.isEmpty()) return;
+                if(receiverData.isEmpty()) reply(event, getReplyEmbed(user.getAsTag()));;
 
                 Mongo.changeUserBalance(userData, user, Integer.parseInt(msg[2]) * -1);
                 Mongo.changeUserBalance(receiverData, getUserIDFromMention(msg[1]), Integer.parseInt(msg[2]));
@@ -200,6 +197,11 @@ public class Listener extends ListenerAdapter
         embed.setColor(Global.getRandomColor());
 
         return embed.build();
+    }
+
+    private static MessageEmbed getCooldownEmbed(String userTag, String timeLeft)
+    {
+        return getReplyEmbed(userTag, "You can use this command again in\n**" + timeLeft + "**");
     }
 
     private static MessageEmbed getReplyEmbed(String userTag)
