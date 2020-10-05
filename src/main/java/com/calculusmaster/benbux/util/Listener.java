@@ -300,6 +300,7 @@ public class Listener extends ListenerAdapter
                     Mongo.changeUserBalance(userData, user, totalChange);
 
                     reply(event, getReplyEmbed(user.getAsTag(), "Earned " + earning + " BenBux with a wager of " + wager + " BenBux" + "\nNet " + (totalChange < 0 ? " Loss " : " Gain") + " of " + totalChange + " BenBux!"));
+                    Mongo.updateTimestamp(user, "gamble_dice", event.getMessage().getTimeCreated());
                 }
                 else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_GAMBLE_DICE_COOLDOWN, "gamble_dice")));
             }
