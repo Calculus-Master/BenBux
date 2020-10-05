@@ -70,7 +70,7 @@ public class Listener extends ListenerAdapter
                 {
                     int amount = r.nextInt(Global.MAX_CRIME_AMOUNT) * (r.nextInt(10) < 6 ? -1 : 1);
                     Mongo.changeUserBalance(userData, user, amount);
-                    event.getChannel().sendMessage(user.getAsMention() + (amount < 0 ? " lost " : " earned ") + Math.abs(amount) + " BenBux!").queue();
+                    reply(event, getReplyEmbed(user.getAsTag(), (amount < 0 ? " lost " : " earned ") + Math.abs(amount) + " BenBux!"));
 
                     if(amount < 0) Mongo.updateTimestamp(user, "crime", event.getMessage().getTimeCreated());
                 }
@@ -122,7 +122,7 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_LEADERBOARD.contains(msg[0]))
             {
-                event.getChannel().sendMessage(Leaderboard.getLeaderboard()).queue();
+                reply(event, Leaderboard.getLeaderboard());
             }
             else if(Global.CMD_STEAL.contains(msg[0]))
             {
@@ -183,7 +183,7 @@ public class Listener extends ListenerAdapter
             else if(msg[0].toLowerCase().equals(Global.CMD_RESTART))
             {
                 Mongo.removeUser(user);
-                event.getChannel().sendMessage(user.getAsMention() + " restarted!").queue();
+                reply(event, getReplyEmbed(user.getAsTag(), "You restarted!"));
             }
         }
     }
@@ -201,7 +201,7 @@ public class Listener extends ListenerAdapter
 
     private static MessageEmbed getCooldownEmbed(String userTag, String timeLeft)
     {
-        return getReplyEmbed(userTag, "You can use this command again in\n**" + timeLeft + "**");
+        return getReplyEmbed(userTag, "You can use this command again in\n" + timeLeft + "");
     }
 
     private static MessageEmbed getReplyEmbed(String userTag)

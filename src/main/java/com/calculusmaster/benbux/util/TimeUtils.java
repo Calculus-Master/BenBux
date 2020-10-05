@@ -26,7 +26,7 @@ public class TimeUtils
         totalDiffSec /= 24;
         int day = totalDiffSec;
 
-        return day + " D " + hr + " HR " + min + " MIN " + sec + " SEC";
+        return "**" + day + "** D **" + hr + "** HR **" + min + "** MIN **" + sec + "** SEC";
     }
 
     public static boolean isOnCooldown(JSONObject userData, MessageReceivedEvent e, int[] cooldown, String cmd)
