@@ -97,12 +97,12 @@ public class Listener extends ListenerAdapter
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
-                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited all money to bank! (" + userData.getInt("benbux") + " BenBux)"));
+                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited all money to your bank! (" + userData.getInt("benbux") + " BenBux)"));
                     Mongo.depositBank(userData, user, userData.getInt("benbux"));
                 }
                 else if(msg[1].chars().allMatch(Character::isDigit) && Integer.parseInt(msg[1]) <= userData.getInt("benbux") && Integer.parseInt(msg[1]) > 0)
                 {
-                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited " + userData.getInt("benbux") + " BenBux to bank!"));
+                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited " + userData.getInt("benbux") + " BenBux to your bank!"));
                     Mongo.depositBank(userData, user, Integer.parseInt(msg[1]));
                 }
                 else reply(event, getReplyEmbed(user.getAsTag()));
@@ -113,12 +113,12 @@ public class Listener extends ListenerAdapter
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
-                    reply(event, getReplyEmbed(user.getAsTag(), "Withdrew all money from bank! (" + userData.getInt("bank") + " BenBux)"));
+                    reply(event, getReplyEmbed(user.getAsTag(), "Withdrew all money from your bank! (" + userData.getInt("bank") + " BenBux)"));
                     Mongo.withdrawBank(userData, user, userData.getInt("bank"));
                 }
                 else if(msg[1].chars().allMatch(Character::isDigit) && Integer.parseInt(msg[1]) <= userData.getInt("bank") && Integer.parseInt(msg[1]) > 0)
                 {
-                    reply(event, getReplyEmbed(user.getAsTag(), "Withdrew " + msg[1] + " BenBux from bank!"));
+                    reply(event, getReplyEmbed(user.getAsTag(), "Withdrew " + msg[1] + " BenBux from your bank!"));
                     Mongo.withdrawBank(userData, user, Integer.parseInt(msg[1]));
                 }
                 else reply(event, getReplyEmbed(user.getAsTag()));
@@ -143,6 +143,7 @@ public class Listener extends ListenerAdapter
                     if(canSteal && victimData.getInt("benbux") > 0)
                     {
                         int stolenAmount = new Random().nextInt(victimData.getInt("benbux"));
+                        reply(event, getReplyEmbed(user.getAsTag(), "Stole " + stolenAmount + " BenBux from " + victimData.getString("username")));
                         Mongo.changeUserBalance(userData, user, stolenAmount);
                         Mongo.changeUserBalance(victimData, getUserIDFromMention(msg[1]), stolenAmount * -1);
                     }
@@ -151,7 +152,7 @@ public class Listener extends ListenerAdapter
                         int lostAmount = new Random().nextInt((userData.getInt("bank") + userData.getInt("benbux")) / 4);
                         boolean lost = new Random().nextInt(5) < 3;
                         if(lost) Mongo.changeUserBalance(userData, user, lostAmount * -1);
-                        event.getChannel().sendMessage("Robbery failed! You lost " + (lost ? lostAmount + " BenBux :(" : "nothing :)")).queue();
+                        reply(event, getReplyEmbed(user.getAsTag(), "Robbery failed! You lost " + (lost ? lostAmount + " BenBux :(" : "nothing :)")));
                     }
 
                     Mongo.updateTimestamp(user, "steal", event.getMessage().getTimeCreated());
@@ -178,7 +179,7 @@ public class Listener extends ListenerAdapter
             {
                 if(msg.length == 1 || msg[1].equals("latest")) reply(event, getReplyEmbed(user.getAsTag(), ChangelogEntry.getLatest()));
                 else if(Global.changelogs.stream().noneMatch(cl -> cl.getVersion().equals(msg[1]))) reply(event, getReplyEmbed(user.getAsTag()));
-                else reply(event, getReplyEmbed(Global.changelogs.stream().filter(cl -> cl.getVersion().equals(msg[1])).collect(Collectors.toList()).get(0).getFullChangelog()));
+                else reply(event, getReplyEmbed(user.getAsTag(), Global.changelogs.stream().filter(cl -> cl.getVersion().equals(msg[1])).collect(Collectors.toList()).get(0).getFullChangelog()));
             }
             else if(Global.CMD_VERSION.contains(msg[0]))
             {
