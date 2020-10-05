@@ -36,6 +36,6 @@ public class ChangelogEntry
 
     public static String getLatest()
     {
-        return Global.changelogs.stream().filter(cl -> cl.getVersion().equals(BenBux.VERSION)).collect(Collectors.toList()).get(0).getFullChangelog();
+        return Global.changelogs.stream().filter(cl -> cl.getVersion().equals(BenBux.VERSION.substring(0, 3))).collect(Collectors.toList()).get(0).getFullChangelog();
     }
 }

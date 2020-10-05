@@ -58,7 +58,7 @@ public class Listener extends ListenerAdapter
                 {
                     int earnedAmount = r.nextInt(Global.MAX_WORK_AMOUNT);
                     Mongo.changeUserBalance(userData, user, earnedAmount);
-                    event.getChannel().sendMessage(user.getAsMention() + " earned " + earnedAmount + " BenBux!").queue();
+                    reply(event, getReplyEmbed(user.getAsTag(), "Earned " + earnedAmount + " BenBux!"));
 
                     Mongo.updateTimestamp(user, "work", event.getMessage().getTimeCreated());
                 }
@@ -89,8 +89,16 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_DEPOSIT.contains(msg[0]))
             {
-                if(msg.length != 2) reply(event, getReplyEmbed(user.getAsTag()));;
-                if(userData.getInt("benbux") < 0) reply(event, getReplyEmbed(user.getAsTag()));
+                if(msg.length != 2)
+                {
+                    reply(event, getReplyEmbed(user.getAsTag()));
+                    return;
+                }
+                if(userData.getInt("benbux") < 0)
+                {
+                    reply(event, getReplyEmbed(user.getAsTag()));
+                    return;
+                }
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
@@ -106,7 +114,11 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_WITHDRAW.contains(msg[0]))
             {
-                if(msg.length != 2) reply(event, getReplyEmbed(user.getAsTag()));;
+                if(msg.length != 2)
+                {
+                    reply(event, getReplyEmbed(user.getAsTag()));
+                    return;
+                }
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
@@ -126,7 +138,11 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_STEAL.contains(msg[0]))
             {
-                if(msg.length != 2) reply(event, getReplyEmbed(user.getAsTag()));;
+                if(msg.length != 2)
+                {
+                    reply(event, getReplyEmbed(user.getAsTag()));
+                    return;
+                }
 
                 if(!TimeUtils.isOnCooldown(userData, event, Global.CMD_STEAL_COOLDOWN, "steal"))
                 {
@@ -158,12 +174,24 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_PAY.contains(msg[0]))
             {
-                if(msg.length != 3) reply(event, getReplyEmbed(user.getAsTag()));;
-                if(getUserIDFromMention(msg[1]).equals(user.getId())) reply(event, getReplyEmbed(user.getAsTag()));;
+                if(msg.length != 3)
+                {
+                    reply(event, getReplyEmbed(user.getAsTag()));
+                    return;
+                }
+                if(getUserIDFromMention(msg[1]).equals(user.getId()))
+                {
+                    reply(event, getReplyEmbed(user.getAsTag()));
+                    return;
+                };
 
                 JSONObject receiverData = new JSONObject(Mongo.BenBuxDB.find(Filters.eq("userID", getUserIDFromMention(msg[1]))).first().toJson());
 
-                if(receiverData.isEmpty()) reply(event, getReplyEmbed(user.getAsTag()));;
+                if(receiverData.isEmpty())
+                {
+                    reply(event, getReplyEmbed(user.getAsTag()));
+                    return;
+                }
 
                 Mongo.changeUserBalance(userData, user, Integer.parseInt(msg[2]) * -1);
                 Mongo.changeUserBalance(receiverData, getUserIDFromMention(msg[1]), Integer.parseInt(msg[2]));
