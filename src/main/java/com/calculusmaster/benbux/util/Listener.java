@@ -2,6 +2,7 @@ package com.calculusmaster.benbux.util;
 
 import com.calculusmaster.benbux.BenBux;
 import com.calculusmaster.benbux.commands.Leaderboard;
+import com.calculusmaster.benbux.commands.Shop;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -35,6 +36,7 @@ public class Listener extends ListenerAdapter
                 Mongo.updateTimestamp(user, "work", event.getMessage().getTimeCreated().minusDays(Global.CMD_WORK_COOLDOWN[0] + 1));
                 Mongo.updateTimestamp(user, "crime", event.getMessage().getTimeCreated().minusDays(Global.CMD_CRIME_COOLDOWN[0] + 1));
                 Mongo.updateTimestamp(user, "steal", event.getMessage().getTimeCreated().minusDays(Global.CMD_STEAL_COOLDOWN[0] + 1));
+                Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
             }
             userData = Mongo.UserInfo(user);
             boolean isNoob = userData.getInt("benbux") == Global.STARTING_BALANCE;
@@ -232,6 +234,10 @@ public class Listener extends ListenerAdapter
                     Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated());
                 }
                 else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_PROST_COOLDOWN, "prost")));
+            }
+            else if(Global.CMD_SHOP.contains(msg[0]))
+            {
+                reply(event, Shop.getShop());
             }
             else if(msg[0].toLowerCase().equals(Global.CMD_RESTART))
             {
