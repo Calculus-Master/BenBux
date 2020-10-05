@@ -26,7 +26,7 @@ public class Global
 
     //Cooldowns are formatted as [0] = Day, [1] = Hour, [2] = Minute, [3] = Second
     public static final int[] CMD_WORK_COOLDOWN = {0, 1, 0, 0};
-    public static final int[] CMD_CRIME_COOLDOWN = CMD_WORK_COOLDOWN;
+    public static final int[] CMD_CRIME_COOLDOWN = {0, 0, 30, 0};
     public static final int[] CMD_STEAL_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_PROST_COOLDOWN = {2, 0, 0, 0};
 

@@ -160,7 +160,7 @@ public class Listener extends ListenerAdapter
                     JSONObject victimData = new JSONObject(Mongo.BenBuxDB.find(Filters.eq("userID", getUserIDFromMention(msg[1]))).first().toJson());
                     boolean canSteal = new Random().nextInt(100) < 40;
 
-                    System.out.println(victimData.toString());
+                    //System.out.println(victimData.toString());
 
                     if(canSteal && victimData.getInt("benbux") > 0)
                     {
