@@ -7,7 +7,7 @@ plugins {
 mainClassName = "com.calculusmaster.benbux.BenBux"
 
 group 'org.calculusmaster'
-version '1.7-hf1'
+version '1.8-SNAPSHOT'
 
 repositories {
     mavenCentral()

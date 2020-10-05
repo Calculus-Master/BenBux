@@ -97,15 +97,15 @@ public class Listener extends ListenerAdapter
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
+                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited all money to bank! (" + userData.getInt("benbux") + " BenBux)"));
                     Mongo.depositBank(userData, user, userData.getInt("benbux"));
-                    event.getChannel().sendMessage(user.getAsMention() + ": All money deposited to bank!").queue();
                 }
                 else if(msg[1].chars().allMatch(Character::isDigit) && Integer.parseInt(msg[1]) <= userData.getInt("benbux") && Integer.parseInt(msg[1]) > 0)
                 {
+                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited " + userData.getInt("benbux") + " BenBux to bank!"));
                     Mongo.depositBank(userData, user, Integer.parseInt(msg[1]));
-                    event.getChannel().sendMessage(user.getAsMention() + ": Deposited " + msg[1] + " BenBux!").queue();
                 }
-                else event.getChannel().sendMessage(user.getAsMention() + " sent an invalid command!").queue();
+                else reply(event, getReplyEmbed(user.getAsTag()));
             }
             else if(Global.CMD_WITHDRAW.contains(msg[0]))
             {
@@ -113,15 +113,15 @@ public class Listener extends ListenerAdapter
 
                 if(msg[1].toLowerCase().equals("all"))
                 {
+                    reply(event, getReplyEmbed(user.getAsTag(), "Withdrew all money from bank! (" + userData.getInt("bank") + " BenBux)"));
                     Mongo.withdrawBank(userData, user, userData.getInt("bank"));
-                    event.getChannel().sendMessage(user.getAsMention() + ": All money withdrawn from bank!").queue();
                 }
                 else if(msg[1].chars().allMatch(Character::isDigit) && Integer.parseInt(msg[1]) <= userData.getInt("bank") && Integer.parseInt(msg[1]) > 0)
                 {
+                    reply(event, getReplyEmbed(user.getAsTag(), "Withdrew " + msg[1] + " BenBux from bank!"));
                     Mongo.withdrawBank(userData, user, Integer.parseInt(msg[1]));
-                    event.getChannel().sendMessage(user.getAsMention() + ": Withdrew " + msg[1] + " BenBux!").queue();
                 }
-                else event.getChannel().sendMessage(user.getAsMention() + " sent an invalid command!").queue();
+                else reply(event, getReplyEmbed(user.getAsTag()));
             }
             else if(Global.CMD_LEADERBOARD.contains(msg[0]))
             {
