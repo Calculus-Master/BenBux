@@ -8,7 +8,7 @@ import javax.security.auth.login.LoginException;
 
 public class BenBux
 {
-    public static final String VERSION = "1.8.7";
+    public static final String VERSION = "1.9";
 
     public static void main(String[] args) throws LoginException
     {

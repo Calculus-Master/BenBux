@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -37,6 +39,7 @@ public class Listener extends ListenerAdapter
                 Mongo.updateTimestamp(user, "crime", event.getMessage().getTimeCreated().minusDays(Global.CMD_CRIME_COOLDOWN[0] + 1));
                 Mongo.updateTimestamp(user, "steal", event.getMessage().getTimeCreated().minusDays(Global.CMD_STEAL_COOLDOWN[0] + 1));
                 Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
+                Mongo.updateTimestamp(user, "gamble_dice", event.getMessage().getTimeCreated().minusDays(Global.CMD_GAMBLE_DICE_COOLDOWN[0] + 1));
             }
             userData = Mongo.UserInfo(user);
             boolean isNoob = userData.getInt("benbux") == Global.STARTING_BALANCE;
@@ -57,6 +60,13 @@ public class Listener extends ListenerAdapter
             if(!userData.has("timestamp_prost"))
             {
                 Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
+                reply(event, getReplyEmbed(user.getAsTag(), "Try that command again"));
+                return;
+            }
+
+            if(!userData.has("timestamp_gamble_dice"))
+            {
+                Mongo.updateTimestamp(user, "gamble_dice", event.getMessage().getTimeCreated().minusDays(Global.CMD_GAMBLE_DICE_COOLDOWN[0] + 1));
                 reply(event, getReplyEmbed(user.getAsTag(), "Try that command again"));
                 return;
             }
@@ -162,7 +172,7 @@ public class Listener extends ListenerAdapter
 
                     //System.out.println(victimData.toString());
 
-                    if(canSteal && victimData.getInt("benbux") > 0)
+                    if(canSteal && victimData.getInt("benbux") > 20)
                     {
                         int stolenAmount = new Random().nextInt(victimData.getInt("benbux"));
                         reply(event, getReplyEmbed(user.getAsTag(), "Stole " + stolenAmount + " BenBux from " + victimData.getString("username")));
@@ -239,7 +249,61 @@ public class Listener extends ListenerAdapter
             {
                 reply(event, Shop.getShop());
             }
-            else if(msg[0].toLowerCase().equals(Global.CMD_RESTART))
+            else if(Global.CMD_BRUH.contains(msg[0]))
+            {
+                String bruh = "";
+                if(new Random().nextInt(10000) == 1)
+                {
+                    bruh = "BRUH BRUH BRUH BRUH BRUH";
+                    Mongo.changeUserBalance(userData, user, 10000);
+                }
+                else bruh = "bruh";
+
+                reply(event, getReplyEmbed(user.getAsTag(), bruh));
+            }
+            else if(Global.CMD_GAMBLE_DICE.contains(msg[0]))
+            {
+                if(isNoob || !TimeUtils.isOnCooldown(userData, event, Global.CMD_GAMBLE_DICE_COOLDOWN, "gamble_dice"))
+                {
+                    if(msg.length != 4)
+                    {
+                        reply(event, getReplyEmbed(user.getAsTag()));
+                        return;
+                    }
+                    else if(!msg[1].chars().allMatch(Character::isDigit) || !msg[2].chars().allMatch(Character::isDigit) || !msg[3].chars().allMatch(Character::isDigit))
+                    {
+                        reply(event, getReplyEmbed(user.getAsTag()));
+                        return;
+                    }
+
+                    //msg[1] is the wager, msg[2] is the guess, msg[3] is the number of dice
+                    int wager = Integer.parseInt(msg[1]);
+                    int guess = Integer.parseInt(msg[2]);
+                    int dice = Integer.parseInt(msg[3]);
+                    int earning = 0;
+
+                    if((wager < 0 || wager > userData.getInt("benbux") + userData.getInt("bank")) || (guess < 1 || guess > 6) || dice < 0)
+                    {
+                        reply(event, getReplyEmbed(user.getAsTag()));
+                        return;
+                    }
+
+                    List<Integer> deviations = new ArrayList<>();
+                    for(int i = 0; i < dice; i++) deviations.add(Math.abs((new Random().nextInt(6) + 1) - guess));
+                    double averageDeviation = deviations.stream().mapToInt(x -> x).sum() / (double)deviations.size();
+
+                    if(averageDeviation == 0) averageDeviation = 1.0 / dice;
+                    earning = (int)((1 / averageDeviation + 0.3) * wager);
+
+                    int totalChange = earning - wager;
+
+                    Mongo.changeUserBalance(userData, user, totalChange);
+
+                    reply(event, getReplyEmbed(user.getAsTag(), "Earned " + earning + " BenBux with a wager of " + wager + " BenBux" + "\nNet " + (totalChange < 0 ? " Loss " : " Gain") + " of " + totalChange + " BenBux!"));
+                }
+                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_GAMBLE_DICE_COOLDOWN, "gamble_dice")));
+            }
+            else if(msg[0].toLowerCase().equals(Global.CMD_RESTART) && Global.CAN_RESTART.contains(user.getId()))
             {
                 Mongo.removeUser(user);
                 reply(event, getReplyEmbed(user.getAsTag(), "You restarted!"));

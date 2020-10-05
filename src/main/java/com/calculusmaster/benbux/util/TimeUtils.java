@@ -3,8 +3,6 @@ package com.calculusmaster.benbux.util;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-
 public class TimeUtils
 {
     public static String timeLeft(JSONObject userData, MessageReceivedEvent e, int[] cooldown, String cmd)

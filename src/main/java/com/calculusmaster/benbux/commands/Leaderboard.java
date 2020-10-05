@@ -36,7 +36,7 @@ public class Leaderboard
     {
         List<Integer> balances = new ArrayList<>(s);
         balances.sort(Collections.reverseOrder());
-        System.out.println(balances.toString());
+        //System.out.println(balances.toString());
 
         int[] sortedArray = new int[balances.size()];
         for(int i = 0; i < balances.size(); i++) sortedArray[i] = balances.get(i);
