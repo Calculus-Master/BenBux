@@ -185,6 +185,7 @@ public class Listener extends ListenerAdapter
                 Mongo.removeUser(user);
                 reply(event, getReplyEmbed(user.getAsTag(), "You restarted!"));
             }
+            else reply(event, getReplyEmbed(user.getAsTag()));
         }
     }
 

@@ -40,7 +40,7 @@ public class Global
     private static final ChangelogEntry CL_V1_5 = new ChangelogEntry("1.5").addChange("Added b!leaderboard");
     private static final ChangelogEntry CL_V1_6 = new ChangelogEntry("1.6").addChange("Added b!pay (WIP)").addChange("Added new feature to b!bux that allows users to check another user's balance").addChange("Changed b!bux to an Embed showing more detailed info").addChange("Added b!changelog").addChange("Added b!version");
     private static final ChangelogEntry CL_V1_7 = new ChangelogEntry("1.7").addChange("Added feature to b!crime: If you successfully commit a crime, there is no cooldown").addChange("Slightly changed the formatting of the leaderboard").addChange("Restricted access to b!restart").addChange("Finished b!pay");
-    private static final ChangelogEntry CL_V1_8 = new ChangelogEntry("1.8").addChange("Added embed messages for b!deposit and b!withdraw").addChange("Fixed b!pay").addChange("Fixed b!changelog for older versions").addChange("Changed cooldowns to Embeds").addChange("Added a ton of Invalid Command Embeds when needed");
+    private static final ChangelogEntry CL_V1_8 = new ChangelogEntry("1.8").addChange("Added embed messages for b!deposit and b!withdraw").addChange("Fixed b!pay").addChange("Fixed b!changelog for older versions").addChange("Changed cooldowns to Embeds").addChange("Added a ton of Invalid Command Embeds when needed").addChange("Changed misc responses to embeds");
     public static final List<ChangelogEntry> changelogs = Arrays.asList(CL_V1_0, CL_V1_1, CL_V1_2, CL_V1_3, CL_V1_4, CL_V1_5, CL_V1_6, CL_V1_7, CL_V1_8);
 
     public static Color getRandomColor()
