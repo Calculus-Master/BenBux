@@ -107,7 +107,7 @@ public class Listener extends ListenerAdapter
                 }
                 else if(msg[1].chars().allMatch(Character::isDigit) && Integer.parseInt(msg[1]) <= userData.getInt("benbux") && Integer.parseInt(msg[1]) > 0)
                 {
-                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited " + userData.getInt("benbux") + " BenBux to your bank!"));
+                    reply(event, getReplyEmbed(user.getAsTag(), "Deposited " + msg[1] + " BenBux to your bank!"));
                     Mongo.depositBank(userData, user, Integer.parseInt(msg[1]));
                 }
                 else reply(event, getReplyEmbed(user.getAsTag()));
