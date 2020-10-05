@@ -202,7 +202,7 @@ public class Listener extends ListenerAdapter
                     return;
                 }
 
-                if(Integer.parseInt(msg[2]) <= 0) reply(event, getReplyEmbed(user.getAsTag()));
+                if(Integer.parseInt(msg[2]) <= 0 || Integer.parseInt(msg[2]) > userData.getInt("benbux") + userData.getInt("bank")) reply(event, getReplyEmbed(user.getAsTag()));
                 else
                 {
                     Mongo.changeUserBalance(userData, user, Integer.parseInt(msg[2]) * -1);
