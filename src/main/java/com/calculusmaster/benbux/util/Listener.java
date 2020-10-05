@@ -52,6 +52,13 @@ public class Listener extends ListenerAdapter
                 return;
             }
 
+            if(!userData.has("timestamp_prost"))
+            {
+                Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
+                reply(event, getReplyEmbed(user.getAsTag(), "Try that command again"));
+                return;
+            }
+
             if(Global.CMD_WORK.contains(msg[0]) && msg.length == 1)
             {
                 if(isNoob || !TimeUtils.isOnCooldown(userData, event, Global.CMD_WORK_COOLDOWN, "work"))
@@ -211,6 +218,20 @@ public class Listener extends ListenerAdapter
             else if(Global.CMD_VERSION.contains(msg[0]))
             {
                 reply(event, getReplyEmbed(user.getAsTag(), "Version " + BenBux.VERSION));
+            }
+            else if(Global.CMD_PROST.contains(msg[0]))
+            {
+                if(isNoob || !TimeUtils.isOnCooldown(userData, event, Global.CMD_PROST_COOLDOWN, "prost"))
+                {
+                    double rating = (new Random().nextInt(101)) / 10.0;
+                    double earnings = (rating / 5.0) * Math.pow(userData.getInt("benbux") + userData.getInt("bank"), rating / 10.0);
+                    Mongo.changeUserBalance(userData, user, (int)earnings);
+
+                    reply(event, getReplyEmbed(user.getAsTag(), "Your you-know-what received a rating of " + rating + ". Earned " + (int)earnings + " BenBux"));
+
+                    Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated());
+                }
+                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_PROST_COOLDOWN, "prost")));
             }
             else if(msg[0].toLowerCase().equals(Global.CMD_RESTART))
             {

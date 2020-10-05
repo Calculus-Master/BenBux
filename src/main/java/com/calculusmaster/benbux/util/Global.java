@@ -20,12 +20,14 @@ public class Global
     public static final List<String> CMD_PAY = Arrays.asList("pay", "give", "donate", "p");
     public static final List<String> CMD_CHANGELOG = Arrays.asList("changelog", "changes");
     public static final List<String> CMD_VERSION = Arrays.asList("version", "ver", "v");
+    public static final List<String> CMD_PROST = Arrays.asList("prostitute", "bjc", "cock");
     public static final String CMD_RESTART = "restart";
 
     //Cooldowns are formatted as [0] = Day, [1] = Hour, [2] = Minute, [3] = Second
     public static final int[] CMD_WORK_COOLDOWN = {0, 1, 0, 0};
     public static final int[] CMD_CRIME_COOLDOWN = CMD_WORK_COOLDOWN;
     public static final int[] CMD_STEAL_COOLDOWN = {0, 2, 0, 0};
+    public static final int[] CMD_PROST_COOLDOWN = {2, 0, 0, 0};
 
     //Config Settings
     public static final int MAX_WORK_AMOUNT = 500;
