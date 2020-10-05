@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "6.0.0"
+}
+
+mainClassName = "com.calculusmaster.benbux.BenBux"
+
+group 'org.calculusmaster'
+version '1.7-hf1'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation 'net.dv8tion:JDA:4.2.0_194'
+    implementation 'org.mongodb:mongodb-driver-sync:4.1.0-beta2'
+    implementation 'org.json:json:20200518'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+}
