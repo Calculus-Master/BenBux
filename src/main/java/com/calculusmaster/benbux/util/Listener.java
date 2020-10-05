@@ -193,10 +193,14 @@ public class Listener extends ListenerAdapter
                     return;
                 }
 
-                Mongo.changeUserBalance(userData, user, Integer.parseInt(msg[2]) * -1);
-                Mongo.changeUserBalance(receiverData, getUserIDFromMention(msg[1]), Integer.parseInt(msg[2]));
+                if(Integer.parseInt(msg[2]) <= 0) reply(event, getReplyEmbed(user.getAsTag()));
+                else
+                {
+                    Mongo.changeUserBalance(userData, user, Integer.parseInt(msg[2]) * -1);
+                    Mongo.changeUserBalance(receiverData, getUserIDFromMention(msg[1]), Integer.parseInt(msg[2]));
 
-                reply(event, getReplyEmbed(user.getAsTag(), "You paid **" + msg[2] + " BenBux** to" + getUserTagFromMention(msg[1]) + "!"));
+                    reply(event, getReplyEmbed(user.getAsTag(), "You paid **" + msg[2] + " BenBux** to" + getUserTagFromMention(msg[1]) + "!"));
+                }
             }
             else if(Global.CMD_CHANGELOG.contains(msg[0]))
             {
