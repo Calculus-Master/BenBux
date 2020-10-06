@@ -1,6 +1,7 @@
 package com.calculusmaster.benbux.util;
 
 import com.calculusmaster.benbux.BenBux;
+import com.calculusmaster.benbux.commands.util.Command;
 import com.calculusmaster.benbux.commands.Leaderboard;
 import com.calculusmaster.benbux.commands.Shop;
 import com.mongodb.client.model.Filters;
@@ -24,6 +25,9 @@ public class Listener extends ListenerAdapter
     public void onMessageReceived(@NotNull MessageReceivedEvent event)
     {
         User user = event.getAuthor();
+        if(user.isBot()) return;
+        if(user.getIdLong() != 309135641453527040L) reply(event, getReplyEmbed(user.getAsTag(), "Not authorized to use the bot at this time"));
+
         String[] msg = event.getMessage().getContentRaw().toLowerCase().trim().split("\\s+");
         JSONObject userData;
         Random r = new Random();
@@ -43,6 +47,8 @@ public class Listener extends ListenerAdapter
             }
             userData = Mongo.UserInfo(user);
             boolean isNoob = userData.getInt("benbux") == Global.STARTING_BALANCE;
+
+            Command c;
 
             if(!userData.getString("username").equals(user.getAsTag()))
             {
@@ -89,7 +95,7 @@ public class Listener extends ListenerAdapter
                 {
                     int amount = r.nextInt(Global.MAX_CRIME_AMOUNT) * (r.nextInt(10) < 6 ? -1 : 1);
                     Mongo.changeUserBalance(userData, user, amount);
-                    reply(event, getReplyEmbed(user.getAsTag(), (amount < 0 ? " lost " : " earned ") + Math.abs(amount) + " BenBux!"));
+                    reply(event, getReplyEmbed(user.getAsTag(), (amount < 0 ? " Lost **" : " Earned **") + Math.abs(amount) + "** BenBux!"));
 
                     if(amount < 0) Mongo.updateTimestamp(user, "crime", event.getMessage().getTimeCreated());
                 }
@@ -153,7 +159,8 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_LEADERBOARD.contains(msg[0]))
             {
-                reply(event, Leaderboard.getLeaderboard());
+                c = new Leaderboard(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_STEAL.contains(msg[0]))
             {
@@ -247,11 +254,12 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_SHOP.contains(msg[0]))
             {
-                reply(event, Shop.getShop());
+                c = new Shop(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_BRUH.contains(msg[0]))
             {
-                String bruh = "";
+                String bruh;
                 if(new Random().nextInt(10000) == 1)
                 {
                     bruh = "BRUH BRUH BRUH BRUH BRUH";

@@ -33,6 +33,7 @@ public class Global
     public static final int[] CMD_STEAL_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_PROST_COOLDOWN = {2, 0, 0, 0};
     public static final int[] CMD_GAMBLE_DICE_COOLDOWN = {0, 3, 0, 0};
+    public static final int[] CMD_RESTART_COOLDOWN = {3, 0, 0, 0};
 
     public static final List<String> CAN_RESTART = Arrays.asList("762770750351999046");
 
@@ -51,6 +52,7 @@ public class Global
     private static final ChangelogEntry CL_V1_7 = new ChangelogEntry("1.7").addChange("Added feature to b!crime: If you successfully commit a crime, there is no cooldown").addChange("Slightly changed the formatting of the leaderboard").addChange("Restricted access to b!restart").addChange("Finished b!pay");
     private static final ChangelogEntry CL_V1_8 = new ChangelogEntry("1.8").addChange("Added embed messages for b!deposit and b!withdraw").addChange("Fixed b!pay").addChange("Fixed b!changelog for older versions").addChange("Changed cooldowns to Embeds").addChange("Added a ton of Invalid Command Embeds when needed").addChange("Changed misc responses to embeds");
     private static final ChangelogEntry CL_V1_9 = new ChangelogEntry("1.9").addChange("Added b!cock").addChange("Added b!shop (WIP)").addChange("Added b!bruh").addChange("Added b!dice gambling");
+    private static final ChangelogEntry CL_V2_0 = new ChangelogEntry("2.0").addChange("Added cooldown to b!restart").addChange("Changed a few cooldowns");
     public static final List<ChangelogEntry> changelogs = Arrays.asList(CL_V1_0, CL_V1_1, CL_V1_2, CL_V1_3, CL_V1_4, CL_V1_5, CL_V1_6, CL_V1_7, CL_V1_8, CL_V1_9);
 
     public static Color getRandomColor()

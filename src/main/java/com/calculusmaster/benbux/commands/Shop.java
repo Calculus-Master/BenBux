@@ -1,17 +1,21 @@
 package com.calculusmaster.benbux.commands;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import com.calculusmaster.benbux.commands.util.Command;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class Shop
+public class Shop extends Command
 {
-    public static MessageEmbed getShop()
+    public Shop(MessageReceivedEvent event, String[] msg)
     {
-        EmbedBuilder shop = new EmbedBuilder();
-
-        shop.setTitle("BenBux Shop");
-        shop.setDescription("Unimplemented");
-
-        return shop.build();
+        super(event, msg);
     }
+
+    @Override
+    public Command runCommand()
+    {
+        this.embed.setTitle("BenBux Shop");
+        this.embed.setDescription("Unimplemented");
+        return this;
+    }
+
 }
