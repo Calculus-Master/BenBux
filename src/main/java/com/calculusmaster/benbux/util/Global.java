@@ -25,6 +25,7 @@ public class Global
     public static final List<String> CMD_SHOP = Arrays.asList("shop", "store");
     public static final List<String> CMD_BRUH = Collections.singletonList("bruh");
     public static final List<String> CMD_DICE = Collections.singletonList("dice");
+    public static final List<String> CMD_SLOTS = Arrays.asList("slots", "slotmachine");
     public static final String CMD_RESTART = "restart";
 
     //Cooldowns are formatted as [0] = Day, [1] = Hour, [2] = Minute, [3] = Second
@@ -33,6 +34,7 @@ public class Global
     public static final int[] CMD_STEAL_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_PROST_COOLDOWN = {2, 0, 0, 0};
     public static final int[] CMD_DICE_COOLDOWN = {0, 3, 0, 0};
+    public static final int[] CMD_SLOTS_COOLDOWN = {0, 0, 0, 0};
     public static final int[] CMD_RESTART_COOLDOWN = {3, 0, 0, 0};
 
     //Config Settings

@@ -58,9 +58,9 @@ public class Listener extends ListenerAdapter
                 this.onMessageReceived(event);
             }*/
 
-            if(!userData.has("timestamp_dice"))
+            if(!userData.has("timestamp_slots"))
             {
-                Mongo.updateTimestamp(user, "dice", event.getMessage().getTimeCreated().minusDays(2));
+                Mongo.updateTimestamp(user, "slots", event.getMessage().getTimeCreated().minusDays(2));
                 this.onMessageReceived(event);
             }
 
@@ -119,48 +119,10 @@ public class Listener extends ListenerAdapter
             else if(Global.CMD_DICE.contains(msg[0]))
             {
                 c = new Dice(event, msg).runCommand();
-                /*
-                if(!TimeUtils.isOnCooldown(userData, event, Global.CMD_DICE_COOLDOWN, "gamble_dice"))
-                {
-                    if(msg.length != 4)
-                    {
-                        reply(event, getReplyEmbed(user.getAsTag()));
-                        return;
-                    }
-                    else if(!msg[1].chars().allMatch(Character::isDigit) || !msg[2].chars().allMatch(Character::isDigit) || !msg[3].chars().allMatch(Character::isDigit))
-                    {
-                        reply(event, getReplyEmbed(user.getAsTag()));
-                        return;
-                    }
-
-                    //msg[1] is the wager, msg[2] is the guess, msg[3] is the number of dice
-                    int wager = Integer.parseInt(msg[1]);
-                    int guess = Integer.parseInt(msg[2]);
-                    int dice = Integer.parseInt(msg[3]);
-                    int earning = 0;
-
-                    if((wager < 0 || wager > userData.getInt("benbux") + userData.getInt("bank")) || (guess < 1 || guess > 6) || dice < 0)
-                    {
-                        reply(event, getReplyEmbed(user.getAsTag()));
-                        return;
-                    }
-
-                    List<Integer> deviations = new ArrayList<>();
-                    for(int i = 0; i < dice; i++) deviations.add(Math.abs((new Random().nextInt(6) + 1) - guess));
-                    double averageDeviation = deviations.stream().mapToInt(x -> x).sum() / (double)deviations.size();
-
-                    if(averageDeviation == 0) averageDeviation = 1.0 / dice;
-                    earning = (int)((1 / averageDeviation + 0.3) * wager);
-
-                    int totalChange = earning - wager;
-
-                    Mongo.changeUserBalance(userData, user, totalChange);
-
-                    reply(event, getReplyEmbed(user.getAsTag(), "Earned " + earning + " BenBux with a wager of " + wager + " BenBux" + "\nNet " + (totalChange < 0 ? " Loss " : " Gain") + " of " + totalChange + " BenBux!"));
-                    Mongo.updateTimestamp(user, "gamble_dice", event.getMessage().getTimeCreated());
-                }
-                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_DICE_COOLDOWN, "gamble_dice")));
-                 */
+            }
+            else if(Global.CMD_SLOTS.contains(msg[0]))
+            {
+                c = new Slots(event, msg).runCommand();
             }
             else if(msg[0].toLowerCase().equals(Global.CMD_RESTART))
             {

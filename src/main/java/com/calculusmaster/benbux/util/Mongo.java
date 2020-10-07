@@ -54,6 +54,7 @@ public class Mongo
         Mongo.updateTimestamp(event.getAuthor(), "steal", event.getMessage().getTimeCreated().minusDays(Global.CMD_STEAL_COOLDOWN[0] + 1));
         Mongo.updateTimestamp(event.getAuthor(), "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
         Mongo.updateTimestamp(event.getAuthor(), "dice", event.getMessage().getTimeCreated().minusDays(Global.CMD_DICE_COOLDOWN[0] + 1));
+        Mongo.updateTimestamp(event.getAuthor(), "slots", event.getMessage().getTimeCreated().minusDays(Global.CMD_SLOTS_COOLDOWN[0] + 1));
     }
 
     public static void addItem(User user, String itemName)
