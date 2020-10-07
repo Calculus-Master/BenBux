@@ -1,10 +1,7 @@
 package com.calculusmaster.benbux.util;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Global
 {
