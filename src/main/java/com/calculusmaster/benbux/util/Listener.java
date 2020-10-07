@@ -102,6 +102,9 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_BAL.contains(msg[0]))
             {
+                c = new Balance(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
+                /*
                 JSONObject targetData = null;
                 if(msg.length > 1)
                 {
@@ -110,10 +113,13 @@ public class Listener extends ListenerAdapter
 
                 if(msg.length > 1 && targetData.isEmpty()) reply(event, getReplyEmbed(user.getAsTag()));
                 else reply(event, getReplyEmbed(msg.length > 1 ? targetData.getString("username") : user.getAsTag(), "Cash: **" + (msg.length > 1 ? targetData.getInt("benbux") : userData.getInt("benbux")) + "** BenBux\nBank: **" + (msg.length > 1 ? targetData.getInt("bank") : userData.getInt("bank")) + "** BenBux"));
+                */
             }
             else if(Global.CMD_DEPOSIT.contains(msg[0]))
             {
-                if(msg.length != 2)
+                c = new Deposit(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
+                /*if(msg.length != 2)
                 {
                     reply(event, getReplyEmbed(user.getAsTag()));
                     return;
@@ -134,11 +140,13 @@ public class Listener extends ListenerAdapter
                     reply(event, getReplyEmbed(user.getAsTag(), "Deposited " + msg[1] + " BenBux to your bank!"));
                     Mongo.depositBank(userData, user, Integer.parseInt(msg[1]));
                 }
-                else reply(event, getReplyEmbed(user.getAsTag()));
+                else reply(event, getReplyEmbed(user.getAsTag()));*/
             }
             else if(Global.CMD_WITHDRAW.contains(msg[0]))
             {
-                if(msg.length != 2)
+                c = new Withdraw(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
+                /*if(msg.length != 2)
                 {
                     reply(event, getReplyEmbed(user.getAsTag()));
                     return;
@@ -154,7 +162,7 @@ public class Listener extends ListenerAdapter
                     reply(event, getReplyEmbed(user.getAsTag(), "Withdrew " + msg[1] + " BenBux from your bank!"));
                     Mongo.withdrawBank(userData, user, Integer.parseInt(msg[1]));
                 }
-                else reply(event, getReplyEmbed(user.getAsTag()));
+                else reply(event, getReplyEmbed(user.getAsTag()));*/
             }
             else if(Global.CMD_LEADERBOARD.contains(msg[0]))
             {
@@ -344,7 +352,7 @@ public class Listener extends ListenerAdapter
         return Mongo.BenBuxDB.find(Filters.eq("userID", getUserIDFromMention(mention))).first() != null ? Mongo.BenBuxDB.find(Filters.eq("userID", getUserIDFromMention(mention))).first().getString("username") : "";
     }
 
-    private static String getUserIDFromMention(String mention)
+    public static String getUserIDFromMention(String mention)
     {
         return mention.substring(mention.indexOf("!") + 1, mention.lastIndexOf(">"));
     }
