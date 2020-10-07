@@ -3,6 +3,7 @@ package com.calculusmaster.benbux.util;
 import com.calculusmaster.benbux.BenBux;
 import com.calculusmaster.benbux.commands.*;
 import com.calculusmaster.benbux.commands.util.Command;
+import com.calculusmaster.benbux.commands.util.GenericResponses;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,7 +17,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 public class Listener extends ListenerAdapter
 {
@@ -39,16 +39,11 @@ public class Listener extends ListenerAdapter
             if(!Mongo.isRegistered(user))
             {
                 Mongo.addUserData(user);
-                Mongo.updateTimestamp(user, "work", event.getMessage().getTimeCreated().minusDays(Global.CMD_WORK_COOLDOWN[0] + 1));
-                Mongo.updateTimestamp(user, "crime", event.getMessage().getTimeCreated().minusDays(Global.CMD_CRIME_COOLDOWN[0] + 1));
-                Mongo.updateTimestamp(user, "steal", event.getMessage().getTimeCreated().minusDays(Global.CMD_STEAL_COOLDOWN[0] + 1));
-                Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
-                Mongo.updateTimestamp(user, "gamble_dice", event.getMessage().getTimeCreated().minusDays(Global.CMD_GAMBLE_DICE_COOLDOWN[0] + 1));
+                Mongo.setInitialTimestamps(event);
             }
-            userData = Mongo.UserInfo(user);
-            boolean isNoob = userData.getInt("benbux") == Global.STARTING_BALANCE;
 
-            Command c;
+            userData = Mongo.UserInfo(user);
+            Command c = null;
 
             if(!userData.getString("username").equals(user.getAsTag()))
             {
@@ -56,95 +51,76 @@ public class Listener extends ListenerAdapter
                 userData = Mongo.UserInfo(user);
             }
 
-            if(!userData.has("timestamp_steal"))
+            //If any new database fields are added, update existing users here
+            /*if(!userData.getString("ver").equals(BenBux.DB_VERSION))
             {
-                Mongo.updateTimestamp(user, "steal", event.getMessage().getTimeCreated().minusDays(Global.CMD_STEAL_COOLDOWN[0] + 1));
-                reply(event, getReplyEmbed(user.getAsTag(), "Try that command again"));
-                return;
-            }
+                System.out.println(userData.getString("username") + " has been updated to version " + BenBux.DB_VERSION + "!");
+                this.onMessageReceived(event);
+            }*/
 
-            if(!userData.has("timestamp_prost"))
+            if(!userData.has("timestamp_dice"))
             {
-                Mongo.updateTimestamp(user, "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
-                reply(event, getReplyEmbed(user.getAsTag(), "Try that command again"));
-                return;
-            }
-
-            if(!userData.has("timestamp_gamble_dice"))
-            {
-                Mongo.updateTimestamp(user, "gamble_dice", event.getMessage().getTimeCreated().minusDays(Global.CMD_GAMBLE_DICE_COOLDOWN[0] + 1));
-                reply(event, getReplyEmbed(user.getAsTag(), "Try that command again"));
-                return;
+                Mongo.updateTimestamp(user, "dice", event.getMessage().getTimeCreated().minusDays(2));
+                this.onMessageReceived(event);
             }
 
             if(Global.CMD_WORK.contains(msg[0]) && msg.length == 1)
             {
                 c = new Work(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_CRIME.contains(msg[0]))
             {
                 c = new Crime(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_BAL.contains(msg[0]))
             {
                 c = new Balance(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_DEPOSIT.contains(msg[0]))
             {
                 c = new Deposit(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_WITHDRAW.contains(msg[0]))
             {
                 c = new Withdraw(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_LEADERBOARD.contains(msg[0]))
             {
                 c = new Leaderboard(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_STEAL.contains(msg[0]))
             {
                 c = new Steal(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_PAY.contains(msg[0]))
             {
                 c = new Pay(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_CHANGELOG.contains(msg[0]))
             {
                 c = new Changelog(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_VERSION.contains(msg[0]))
             {
                 c = new Version(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_PROST.contains(msg[0]))
             {
                 c = new Prost(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_SHOP.contains(msg[0]))
             {
                 c = new Shop(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_BRUH.contains(msg[0]))
             {
                 c = new Bruh(event, msg).runCommand();
-                reply(event, c.getResponseEmbed());
             }
-            else if(Global.CMD_GAMBLE_DICE.contains(msg[0]))
+            else if(Global.CMD_DICE.contains(msg[0]))
             {
-                if(isNoob || !TimeUtils.isOnCooldown(userData, event, Global.CMD_GAMBLE_DICE_COOLDOWN, "gamble_dice"))
+                c = new Dice(event, msg).runCommand();
+                /*
+                if(!TimeUtils.isOnCooldown(userData, event, Global.CMD_DICE_COOLDOWN, "gamble_dice"))
                 {
                     if(msg.length != 4)
                     {
@@ -183,14 +159,16 @@ public class Listener extends ListenerAdapter
                     reply(event, getReplyEmbed(user.getAsTag(), "Earned " + earning + " BenBux with a wager of " + wager + " BenBux" + "\nNet " + (totalChange < 0 ? " Loss " : " Gain") + " of " + totalChange + " BenBux!"));
                     Mongo.updateTimestamp(user, "gamble_dice", event.getMessage().getTimeCreated());
                 }
-                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_GAMBLE_DICE_COOLDOWN, "gamble_dice")));
+                else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_DICE_COOLDOWN, "gamble_dice")));
+                 */
             }
-            else if(msg[0].toLowerCase().equals(Global.CMD_RESTART) && Global.CAN_RESTART.contains(user.getId()))
+            else if(msg[0].toLowerCase().equals(Global.CMD_RESTART))
             {
-                Mongo.removeUser(user);
-                reply(event, getReplyEmbed(user.getAsTag(), "You restarted!"));
+                c = new Restart(event, msg).runCommand();
             }
-            else reply(event, getReplyEmbed(user.getAsTag()));
+            else c = new Invalid(event).runCommand();
+
+            reply(event, c.getResponseEmbed());
         }
     }
 

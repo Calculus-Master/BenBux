@@ -1,6 +1,6 @@
 package com.calculusmaster.benbux.util;
 
-import com.calculusmaster.benbux.util.Global;
+import com.calculusmaster.benbux.BenBux;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -10,10 +10,13 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bson.Document;
 import org.json.JSONObject;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Mongo
 {
@@ -33,11 +36,6 @@ public class Mongo
         return new JSONObject(BenBuxDB.find(Filters.eq("userID", u.getId())).first().toJson());
     }
 
-    public static JSONObject UserInfo(String userID)
-    {
-        return new JSONObject(BenBuxDB.find(Filters.eq("userID", userID)).first().toJson());
-    }
-
     public static boolean isRegistered(User u)
     {
         return BenBuxDB.find(Filters.eq("userID", u.getId())).first() != null;
@@ -45,8 +43,34 @@ public class Mongo
 
     public static void addUserData(User u)
     {
-        Document userInfo = new Document("userID", u.getId()).append("benbux", Global.STARTING_BALANCE).append("bank", 0).append("username", u.getAsTag());
+        Document userInfo = new Document("userID", u.getId()).append("ver", BenBux.DB_VERSION).append("benbux", Global.STARTING_BALANCE).append("bank", 0).append("username", u.getAsTag());
         BenBuxDB.insertOne(userInfo);
+    }
+
+    public static void setInitialTimestamps(MessageReceivedEvent event)
+    {
+        Mongo.updateTimestamp(event.getAuthor(), "work", event.getMessage().getTimeCreated().minusDays(Global.CMD_WORK_COOLDOWN[0] + 1));
+        Mongo.updateTimestamp(event.getAuthor(), "crime", event.getMessage().getTimeCreated().minusDays(Global.CMD_CRIME_COOLDOWN[0] + 1));
+        Mongo.updateTimestamp(event.getAuthor(), "steal", event.getMessage().getTimeCreated().minusDays(Global.CMD_STEAL_COOLDOWN[0] + 1));
+        Mongo.updateTimestamp(event.getAuthor(), "prost", event.getMessage().getTimeCreated().minusDays(Global.CMD_PROST_COOLDOWN[0] + 1));
+        Mongo.updateTimestamp(event.getAuthor(), "dice", event.getMessage().getTimeCreated().minusDays(Global.CMD_DICE_COOLDOWN[0] + 1));
+    }
+
+    public static void addItem(User user, String itemName)
+    {
+        BenBuxDB.updateOne(Filters.eq("userID", user.getId()), Updates.push("items", itemName));
+    }
+
+    public static void removeItem(User user, String itemName)
+    {
+        JSONObject j = new JSONObject(BenBuxDB.find(Filters.eq("userID", user.getId())).first().toJson());
+        List<String> l = new ArrayList<>();
+
+        for(int i = 0; i < j.getJSONArray("items").length(); i++) l.add(j.getJSONArray("items").getString(i));
+        l.remove(itemName);
+
+        BenBuxDB.updateOne(Filters.eq("userID", user.getId()), Updates.unset("items"));
+        for (String s : l) addItem(user, s);
     }
 
     public static void removeUser(User u)
