@@ -1,5 +1,6 @@
 package com.calculusmaster.benbux.commands.util;
 
+import com.calculusmaster.benbux.util.Global;
 import com.calculusmaster.benbux.util.Mongo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -32,6 +33,7 @@ public abstract class Command
 
     public MessageEmbed getResponseEmbed()
     {
+        this.embed.setColor(Global.getRandomColor());
         return this.embed.build();
     }
 }

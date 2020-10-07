@@ -3,7 +3,6 @@ package com.calculusmaster.benbux.commands.util;
 import com.calculusmaster.benbux.util.Mongo;
 import com.calculusmaster.benbux.util.TimeUtils;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.json.JSONObject;
 
 public abstract class CooldownCommand extends Command
 {

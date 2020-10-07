@@ -30,12 +30,12 @@ public class Withdraw extends Command
 
         if(this.msg[1].toLowerCase().equals("all"))
         {
-            response = "Withdrew all money from your bank! (" + this.userData.getInt("bank") + " BenBux)";
+            response = "Withdrew all money from your bank! (**" + this.userData.getInt("bank") + "** BenBux)";
             Mongo.withdrawBank(this.userData, this.user, this.userData.getInt("bank"));
         }
         else if(this.msg[1].chars().allMatch(Character::isDigit) && Integer.parseInt(this.msg[1]) <= this.userData.getInt("bank") && Integer.parseInt(this.msg[1]) > 0)
         {
-            response = "Withdrew " + this.msg[1] + " BenBux from your bank!";
+            response = "Withdrew **" + this.msg[1] + "** BenBux from your bank!";
             Mongo.withdrawBank(this.userData, this.user, Integer.parseInt(this.msg[1]));
         }
         else

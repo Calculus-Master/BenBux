@@ -31,12 +31,12 @@ public class Deposit extends Command
 
         if(this.msg[1].toLowerCase().equals("all"))
         {
-            response = "Deposited all money to your bank! (" + userData.getInt("benbux") + " BenBux)";
+            response = "Deposited all money to your bank! (**" + userData.getInt("benbux") + "** BenBux)";
             Mongo.depositBank(this.userData, this.user, this.userData.getInt("benbux"));
         }
         else if(this.msg[1].chars().allMatch(Character::isDigit) && Integer.parseInt(this.msg[1]) <= this.userData.getInt("benbux") && Integer.parseInt(this.msg[1]) > 0)
         {
-            response = "Deposited " + this.msg[1] + " BenBux to your bank!";
+            response = "Deposited **" + this.msg[1] + "** BenBux to your bank!";
             Mongo.depositBank(this.userData, this.user, Integer.parseInt(this.msg[1]));
         }
         else

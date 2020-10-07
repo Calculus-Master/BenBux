@@ -21,7 +21,7 @@ public class Work extends CooldownCommand
         Random r = new Random();
 
         int earnedAmount = r.nextInt(Global.MAX_WORK_AMOUNT);
-        Mongo.changeUserBalance(userData, user, earnedAmount);
+        Mongo.changeUserBalance(this.userData, this.user, earnedAmount);
         response = "Earned " + earnedAmount + " BenBux!";
 
         this.embed.setTitle(this.user.getAsTag());

@@ -15,6 +15,11 @@ public class Shop extends Command
     {
         this.embed.setTitle("BenBux Shop");
         this.embed.setDescription("Unimplemented");
+        /*
+        Ideas:
+            BenBux Booster: 1hr, 2hr, 6hr
+            Bank Security Levels (in combination with bank robbery): 1, 2, 3, 4, 5
+         */
         return this;
     }
 
