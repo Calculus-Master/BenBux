@@ -78,6 +78,9 @@ public class Listener extends ListenerAdapter
 
             if(Global.CMD_WORK.contains(msg[0]) && msg.length == 1)
             {
+                c = new Work(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
+                /*
                 if(isNoob || !TimeUtils.isOnCooldown(userData, event, Global.CMD_WORK_COOLDOWN, "work"))
                 {
                     int earnedAmount = r.nextInt(Global.MAX_WORK_AMOUNT);
@@ -87,9 +90,13 @@ public class Listener extends ListenerAdapter
                     Mongo.updateTimestamp(user, "work", event.getMessage().getTimeCreated());
                 }
                 else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_WORK_COOLDOWN, "work")));
+                */
             }
             else if(Global.CMD_CRIME.contains(msg[0]))
             {
+                c = new Crime(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
+                /*
                 if(isNoob || !TimeUtils.isOnCooldown(userData, event, Global.CMD_CRIME_COOLDOWN, "crime"))
                 {
                     int amount = r.nextInt(Global.MAX_CRIME_AMOUNT) * (r.nextInt(10) < 6 ? -1 : 1);
@@ -99,6 +106,7 @@ public class Listener extends ListenerAdapter
                     if(amount < 0) Mongo.updateTimestamp(user, "crime", event.getMessage().getTimeCreated());
                 }
                 else reply(event, getCooldownEmbed(user.getAsTag(), TimeUtils.timeLeft(userData, event, Global.CMD_CRIME_COOLDOWN, "crime")));
+                */
             }
             else if(Global.CMD_BAL.contains(msg[0]))
             {

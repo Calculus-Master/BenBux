@@ -10,7 +10,7 @@ public abstract class CooldownCommand extends Command
     protected String cmdName;
     protected int[] cooldown;
 
-    public CooldownCommand(MessageReceivedEvent event, JSONObject userData, String[] msg, String cmdName, int... cooldown)
+    public CooldownCommand(MessageReceivedEvent event, String[] msg, String cmdName, int... cooldown)
     {
         super(event, msg);
         this.cmdName = cmdName;
@@ -30,5 +30,5 @@ public abstract class CooldownCommand extends Command
         return this;
     }
 
-    public abstract void runLogic();
+    protected abstract void runLogic();
 }
