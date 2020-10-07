@@ -24,7 +24,8 @@ public class Deposit extends Command
         }
         else if(this.userData.getInt("benbux") < 0)
         {
-            this.embed = GenericResponses.invalid(this.user);
+            this.embed.setTitle(this.user.getAsTag());
+            this.embed.setDescription("Can't deposit because you're in debt!");
             return this;
         }
 
