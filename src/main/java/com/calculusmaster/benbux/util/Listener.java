@@ -1,5 +1,6 @@
 package com.calculusmaster.benbux.util;
 
+import com.calculusmaster.benbux.BenBux;
 import com.calculusmaster.benbux.commands.*;
 import com.calculusmaster.benbux.commands.util.Command;
 import com.mongodb.client.model.Filters;
@@ -45,16 +46,14 @@ public class Listener extends ListenerAdapter
                 userData = Mongo.UserInfo(user);
             }
 
-            //If any new database fields are added, update existing users here
-            /*if(!userData.getString("ver").equals(BenBux.DB_VERSION))
+            //1.1: timestamp_restart
+            if(!userData.getString("ver").equals("1.1"))
             {
-                System.out.println(userData.getString("username") + " has been updated to version " + BenBux.DB_VERSION + "!");
-                this.onMessageReceived(event);
-            }*/
+                System.out.println(userData.getString("username") + " has been updated to version 1.1!");
 
-            if(!userData.has("timestamp_slots"))
-            {
-                Mongo.updateTimestamp(user, "slots", event.getMessage().getTimeCreated().minusDays(2));
+                Mongo.updateTimestamp(user, "restart", event.getMessage().getTimeCreated().minusDays(1));
+                Mongo.BenBuxDB.updateOne(Filters.eq("userID", user.getId()), Updates.set("ver", "1.1"));
+
                 this.onMessageReceived(event);
             }
 

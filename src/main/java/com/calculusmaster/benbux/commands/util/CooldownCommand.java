@@ -22,7 +22,7 @@ public abstract class CooldownCommand extends Command
         if(!TimeUtils.isOnCooldown(this.userData, this.event, this.cooldown, this.cmdName))
         {
             this.runLogic();
-            Mongo.updateTimestamp(this.user, this.cmdName, this.event.getMessage().getTimeCreated());
+            if(!this.embed.build().getDescription().toLowerCase().equals(GenericResponses.invalid(this.user).build().getDescription().toLowerCase())) Mongo.updateTimestamp(this.user, this.cmdName, this.event.getMessage().getTimeCreated());
         }
         else this.embed = GenericResponses.onCooldown(this.user, this.userData, this.event, this.cooldown, this.cmdName);
 
