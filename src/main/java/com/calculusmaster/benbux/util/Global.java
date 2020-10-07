@@ -34,7 +34,7 @@ public class Global
     public static final int[] CMD_STEAL_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_PROST_COOLDOWN = {2, 0, 0, 0};
     public static final int[] CMD_DICE_COOLDOWN = {0, 3, 0, 0};
-    public static final int[] CMD_SLOTS_COOLDOWN = {0, 0, 0, 0};
+    public static final int[] CMD_SLOTS_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_RESTART_COOLDOWN = {3, 0, 0, 0};
 
     //Config Settings

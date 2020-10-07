@@ -1,9 +1,7 @@
 package com.calculusmaster.benbux.util;
 
-import com.calculusmaster.benbux.BenBux;
 import com.calculusmaster.benbux.commands.*;
 import com.calculusmaster.benbux.commands.util.Command;
-import com.calculusmaster.benbux.commands.util.GenericResponses;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -14,8 +12,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Listener extends ListenerAdapter
@@ -32,8 +28,6 @@ public class Listener extends ListenerAdapter
 
         if(msg[0].startsWith(Global.PREFIX))
         {
-            if(user.getIdLong() != 309135641453527040L) reply(event, getReplyEmbed(user.getAsTag(), "Not authorized to use the bot at this time"));
-
             msg[0] = msg[0].substring(Global.PREFIX.length()).toLowerCase();
 
             if(!Mongo.isRegistered(user))
@@ -43,7 +37,7 @@ public class Listener extends ListenerAdapter
             }
 
             userData = Mongo.UserInfo(user);
-            Command c = null;
+            Command c;
 
             if(!userData.getString("username").equals(user.getAsTag()))
             {
@@ -130,7 +124,7 @@ public class Listener extends ListenerAdapter
             }
             else c = new Invalid(event).runCommand();
 
-            reply(event, c.getResponseEmbed());
+            event.getChannel().sendMessage(c.getResponseEmbed()).queue();
         }
     }
 
@@ -143,21 +137,6 @@ public class Listener extends ListenerAdapter
         embed.setColor(Global.getRandomColor());
 
         return embed.build();
-    }
-
-    private static MessageEmbed getCooldownEmbed(String userTag, String timeLeft)
-    {
-        return getReplyEmbed(userTag, "You can use this command again in\n" + timeLeft + "");
-    }
-
-    private static MessageEmbed getReplyEmbed(String userTag)
-    {
-        return getReplyEmbed(userTag, "Invalid Command");
-    }
-
-    private static void reply(MessageReceivedEvent e, MessageEmbed embed)
-    {
-        e.getChannel().sendMessage(embed).queue();
     }
 
     public static String getUserTagFromMention(String mention)

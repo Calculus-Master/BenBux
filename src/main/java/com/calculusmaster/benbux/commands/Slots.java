@@ -37,7 +37,6 @@ public class Slots extends CooldownCommand
 
         if(this.msg[1].toLowerCase().equals("info"))
         {
-            response.append("***Slot Machine Levels:*** \n");
             for(SlotLevel l : this.levels) response.append("**Level ").append(l.level).append(":** Costs **").append(l.cost).append("** BenBux, with **").append(l.slots).append("** Slots and a Jackpot of **").append(l.jackpot).append("** BenBux!\n");
         }
         else if(!this.msg[1].chars().allMatch(Character::isDigit) || !isValidSlotLevel(Integer.parseInt(this.msg[1])) || this.userData.getInt("benbux") + this.userData.getInt("bank") < this.getSlotLevel(Integer.parseInt(this.msg[1])).cost)
@@ -60,7 +59,7 @@ public class Slots extends CooldownCommand
             response.append("\nNumber of 7's: ").append(numMatches).append("\n Earned **").append(earnings).append("** BenBux!");
         }
 
-        this.embed.setTitle(this.user.getAsTag());
+        this.embed.setTitle(this.msg[1].toLowerCase().equals("info") ? "**Slot Machine Levels:** \n" : this.user.getAsTag());
         this.embed.setDescription(response.toString());
     }
 
