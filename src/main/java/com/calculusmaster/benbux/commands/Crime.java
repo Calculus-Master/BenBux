@@ -40,7 +40,7 @@ public class Crime extends CooldownCommand
         if(!TimeUtils.isOnCooldown(this.userData, this.event, this.cooldown, this.cmdName))
         {
             this.runLogic();
-            if(this.amount > 0) Mongo.updateTimestamp(this.user, this.cmdName, this.event.getMessage().getTimeCreated());
+            if(this.amount < 0) Mongo.updateTimestamp(this.user, this.cmdName, this.event.getMessage().getTimeCreated());
         }
         else this.embed = GenericResponses.onCooldown(this.user, this.userData, this.event, this.cooldown, this.cmdName);
 

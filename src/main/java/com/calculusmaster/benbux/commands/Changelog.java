@@ -3,7 +3,6 @@ package com.calculusmaster.benbux.commands;
 import com.calculusmaster.benbux.BenBux;
 import com.calculusmaster.benbux.commands.util.Command;
 import com.calculusmaster.benbux.commands.util.GenericResponses;
-import com.calculusmaster.benbux.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -23,8 +22,8 @@ public class Changelog extends Command
     private static final ChangelogEntry CL_V1_7 = new ChangelogEntry("1.7").addChange("Added feature to b!crime: If you successfully commit a crime, there is no cooldown").addChange("Slightly changed the formatting of the leaderboard").addChange("Restricted access to b!restart").addChange("Finished b!pay");
     private static final ChangelogEntry CL_V1_8 = new ChangelogEntry("1.8").addChange("Added embed messages for b!deposit and b!withdraw").addChange("Fixed b!pay").addChange("Fixed b!changelog for older versions").addChange("Changed cooldowns to Embeds").addChange("Added a ton of Invalid Command Embeds when needed").addChange("Changed misc responses to embeds");
     private static final ChangelogEntry CL_V1_9 = new ChangelogEntry("1.9").addChange("Added b!cock").addChange("Added b!shop (WIP)").addChange("Added b!bruh").addChange("Added b!dice gambling");
-    private static final ChangelogEntry CL_V2_0 = new ChangelogEntry("2.0").addChange("Added cooldown to b!restart").addChange("Changed a few cooldowns");
-    public static final List<ChangelogEntry> changelogs = Arrays.asList(CL_V1_0, CL_V1_1, CL_V1_2, CL_V1_3, CL_V1_4, CL_V1_5, CL_V1_6, CL_V1_7, CL_V1_8, CL_V1_9);
+    private static final ChangelogEntry CL_V2_0 = new ChangelogEntry("2.0").addChange("Added cooldown to b!restart").addChange("Changed a few cooldowns").addChange("Converted all commands to objects").addChange("Added b!slots").addChange("Changed b!dice payouts");
+    public static final List<ChangelogEntry> changelogs = Arrays.asList(CL_V1_0, CL_V1_1, CL_V1_2, CL_V1_3, CL_V1_4, CL_V1_5, CL_V1_6, CL_V1_7, CL_V1_8, CL_V1_9, CL_V2_0);
 
     public Changelog(MessageReceivedEvent event, String[] msg)
     {
