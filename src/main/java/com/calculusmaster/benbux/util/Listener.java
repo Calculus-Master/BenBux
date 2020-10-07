@@ -1,9 +1,8 @@
 package com.calculusmaster.benbux.util;
 
 import com.calculusmaster.benbux.BenBux;
+import com.calculusmaster.benbux.commands.*;
 import com.calculusmaster.benbux.commands.util.Command;
-import com.calculusmaster.benbux.commands.Leaderboard;
-import com.calculusmaster.benbux.commands.Shop;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -230,13 +229,13 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_CHANGELOG.contains(msg[0]))
             {
-                if(msg.length == 1 || msg[1].equals("latest")) reply(event, getReplyEmbed(user.getAsTag(), ChangelogEntry.getLatest()));
-                else if(Global.changelogs.stream().noneMatch(cl -> cl.getVersion().equals(msg[1]))) reply(event, getReplyEmbed(user.getAsTag()));
-                else reply(event, getReplyEmbed(user.getAsTag(), Global.changelogs.stream().filter(cl -> cl.getVersion().equals(msg[1])).collect(Collectors.toList()).get(0).getFullChangelog()));
+                c = new Changelog(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_VERSION.contains(msg[0]))
             {
-                reply(event, getReplyEmbed(user.getAsTag(), "Version " + BenBux.VERSION));
+                c = new Version(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_PROST.contains(msg[0]))
             {
@@ -259,15 +258,8 @@ public class Listener extends ListenerAdapter
             }
             else if(Global.CMD_BRUH.contains(msg[0]))
             {
-                String bruh;
-                if(new Random().nextInt(10000) == 1)
-                {
-                    bruh = "BRUH BRUH BRUH BRUH BRUH";
-                    Mongo.changeUserBalance(userData, user, 10000);
-                }
-                else bruh = "bruh";
-
-                reply(event, getReplyEmbed(user.getAsTag(), bruh));
+                c = new Bruh(event, msg).runCommand();
+                reply(event, c.getResponseEmbed());
             }
             else if(Global.CMD_GAMBLE_DICE.contains(msg[0]))
             {

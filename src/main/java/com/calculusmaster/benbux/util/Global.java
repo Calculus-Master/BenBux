@@ -41,7 +41,7 @@ public class Global
     public static final int MAX_WORK_AMOUNT = 500;
     public static final int MAX_CRIME_AMOUNT = 1000;
 
-    //Changelogs
+    /*Changelogs
     private static final ChangelogEntry CL_V1_0 = new ChangelogEntry("1.0").addChange("Initial Release").addChange("Added b!work");
     private static final ChangelogEntry CL_V1_1 = new ChangelogEntry("1.1").addChange("Added b!crime");
     private static final ChangelogEntry CL_V1_2 = new ChangelogEntry("1.2").addChange("Added b!bux");
@@ -54,7 +54,7 @@ public class Global
     private static final ChangelogEntry CL_V1_9 = new ChangelogEntry("1.9").addChange("Added b!cock").addChange("Added b!shop (WIP)").addChange("Added b!bruh").addChange("Added b!dice gambling");
     private static final ChangelogEntry CL_V2_0 = new ChangelogEntry("2.0").addChange("Added cooldown to b!restart").addChange("Changed a few cooldowns");
     public static final List<ChangelogEntry> changelogs = Arrays.asList(CL_V1_0, CL_V1_1, CL_V1_2, CL_V1_3, CL_V1_4, CL_V1_5, CL_V1_6, CL_V1_7, CL_V1_8, CL_V1_9);
-
+    */
     public static Color getRandomColor()
     {
         Random r = new Random();
