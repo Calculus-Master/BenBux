@@ -30,13 +30,15 @@ public class Dice extends CooldownCommand
         int wager = Integer.parseInt(this.msg[1]);
         int guess = Integer.parseInt(this.msg[2]);
         int dice = Integer.parseInt(this.msg[3]);
-        int earning = 0;
+        int earning;
 
         if((wager < 0 || wager > this.userData.getInt("benbux") + this.userData.getInt("bank")) || (guess < 1 || guess > 6) || dice < 0)
         {
             this.embed = GenericResponses.invalid(this.user);
             return;
         }
+
+        if(dice < 50) dice = 50;
 
         double specificWager = (double)wager / (double)dice;
 
@@ -53,16 +55,16 @@ public class Dice extends CooldownCommand
 
     private double getSpecificEarning(double specificWager, int guess)
     {
-        int diceRoll = new Random().nextInt(6) + 1;
+        int diceRoll = new Random(System.currentTimeMillis()).nextInt(6) + 1;
         int deviation = Math.abs(diceRoll - guess);
 
         switch(deviation)
         {
             case 0: return specificWager * 5.0;
-            case 1: return specificWager * 3.0;
+            case 1: return specificWager * 1.1;
             case 2: return specificWager * 1.0;
             case 3: return specificWager * 0.5;
-            case 4: return specificWager * -3.0;
+            case 4: return specificWager * -2.0;
             case 5: return specificWager * -5.0;
             default: return 0;
         }

@@ -19,9 +19,9 @@ public class Slots extends CooldownCommand
     {
         super(event, msg, "slots", Global.CMD_SLOTS_COOLDOWN);
 
-        levels.add(new SlotLevel(1, 250, 1000));
-        levels.add(new SlotLevel(2, 1000, 5000));
-        levels.add(new SlotLevel(3, 2500, 10000));
+        levels.add(new SlotLevel(1, 250, 2000));
+        levels.add(new SlotLevel(2, 1000, 10000));
+        levels.add(new SlotLevel(3, 2500, 50000));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Slots extends CooldownCommand
         {
             int[] rollResults = new int[this.slots];
 
-            for(int i = 0; i < this.slots; i++) rollResults[i] = new Random().nextInt(10);
+            for(int i = 0; i < this.slots; i++) rollResults[i] = new Random(System.currentTimeMillis()).nextInt(10);
 
             return rollResults;
         }

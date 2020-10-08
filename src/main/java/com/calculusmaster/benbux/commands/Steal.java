@@ -7,6 +7,7 @@ import com.calculusmaster.benbux.util.Listener;
 import com.calculusmaster.benbux.util.Mongo;
 import com.mongodb.client.model.Filters;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.bson.Document;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -28,10 +29,16 @@ public class Steal extends CooldownCommand
         }
 
         String response;
-        JSONObject victimData = new JSONObject(Mongo.BenBuxDB.find(Filters.eq("userID", Listener.getUserIDFromMention(this.msg[1]))).first().toJson());
+        Document victim = Mongo.BenBuxDB.find(Filters.eq("userID", Listener.getUserIDFromMention(this.msg[1]))).first();
+        JSONObject victimData = new JSONObject(victim == null ? "" : victim.toJson());
         boolean canSteal = new Random().nextInt(100) < 40;
 
-        if(canSteal && victimData.getInt("benbux") > 20)
+        if(victim == null || victimData.isEmpty())
+        {
+            this.embed = GenericResponses.invalid(this.user);
+            return;
+        }
+        else if(canSteal && victimData.getInt("benbux") > 20)
         {
             int stolenAmount = new Random().nextInt(victimData.getInt("benbux"));
             response = "Stole " + stolenAmount + " BenBux from " + victimData.getString("username");

@@ -30,8 +30,8 @@ public class Global
     public static final int[] CMD_CRIME_COOLDOWN = {0, 0, 30, 0};
     public static final int[] CMD_STEAL_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_PROST_COOLDOWN = {0, 2, 0, 0};
-    public static final int[] CMD_DICE_COOLDOWN = {0, 0, 0, 2};
-    public static final int[] CMD_SLOTS_COOLDOWN = {0, 0, 0, 2};
+    public static final int[] CMD_DICE_COOLDOWN = {0, 0, 15, 0};
+    public static final int[] CMD_SLOTS_COOLDOWN = {0, 0, 2, 0};
     public static final int[] CMD_RESTART_COOLDOWN = {3, 0, 0, 0};
 
     //Config Settings
