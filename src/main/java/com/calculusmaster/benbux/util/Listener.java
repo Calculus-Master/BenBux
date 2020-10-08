@@ -55,6 +55,7 @@ public class Listener extends ListenerAdapter
                 Mongo.BenBuxDB.updateOne(Filters.eq("userID", user.getId()), Updates.set("ver", "1.1"));
 
                 this.onMessageReceived(event);
+		        return;
             }
 
             if(Global.CMD_WORK.contains(msg[0]) && msg.length == 1)

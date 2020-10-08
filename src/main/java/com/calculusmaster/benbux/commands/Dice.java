@@ -48,7 +48,7 @@ public class Dice extends CooldownCommand
         Mongo.changeUserBalance(this.userData, this.user, totalChange);
 
         this.embed.setTitle(this.user.getAsTag());
-        this.embed.setDescription("Earned " + earning + " BenBux with a wager of " + wager + " BenBux" + "\nNet " + (totalChange < 0 ? " Loss " : " Gain") + " of " + totalChange + " BenBux!");
+        this.embed.setDescription("Earned " + earning + " BenBux with a wager of " + wager + " BenBux" + "\nNet " + (totalChange < 0 ? " Loss " : " Gain") + " of " + Math.abs(totalChange) + " BenBux!");
     }
 
     private double getSpecificEarning(double specificWager, int guess)

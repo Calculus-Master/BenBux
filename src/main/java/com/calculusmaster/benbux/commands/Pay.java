@@ -6,6 +6,7 @@ import com.calculusmaster.benbux.util.Listener;
 import com.calculusmaster.benbux.util.Mongo;
 import com.mongodb.client.model.Filters;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.bson.Document;
 import org.json.JSONObject;
 
 public class Pay extends Command
@@ -24,10 +25,11 @@ public class Pay extends Command
             return this;
         }
 
-        JSONObject receiverData = new JSONObject(Mongo.BenBuxDB.find(Filters.eq("userID", Listener.getUserIDFromMention(this.msg[1]))).first().toJson());
+        Document receiver = Mongo.BenBuxDB.find(Filters.eq("userID", Listener.getUserIDFromMention(this.msg[1]))).first();
+        JSONObject receiverData = new JSONObject(receiver == null ? "" : receiver.toJson());
         String response;
 
-        if(receiverData.isEmpty() || Integer.parseInt(this.msg[2]) <= 0 || Integer.parseInt(this.msg[2]) > this.userData.getInt("benbux") + this.userData.getInt("bank"))
+        if(receiver == null || receiverData.isEmpty() || Integer.parseInt(this.msg[2]) <= 0 || Integer.parseInt(this.msg[2]) > this.userData.getInt("benbux") + this.userData.getInt("bank"))
         {
             this.embed = GenericResponses.invalid(this.user);
             return this;
@@ -41,7 +43,7 @@ public class Pay extends Command
             Mongo.changeUserBalance(this.userData, this.user, Integer.parseInt(this.msg[2]) * -1);
             Mongo.changeUserBalance(receiverData, Listener.getUserIDFromMention(this.msg[1]), Integer.parseInt(this.msg[2]));
 
-            response = "Paid **" + this.msg[2] + " BenBux** to" + Listener.getUserTagFromMention(this.msg[1]) + "!";
+            response = "Paid **" + this.msg[2] + " BenBux** to " + Listener.getUserTagFromMention(this.msg[1]) + "!";
         }
 
         this.embed.setTitle(this.user.getAsTag());
