@@ -55,7 +55,7 @@ public class Slots extends CooldownCommand
             response.append("**Slots** ").append("(Level: **").append(level.level).append("**, Jackpot: **").append(level.jackpot).append("**, Cost: **").append(level.cost).append("**):\n**[ ");
             for(int res : rollResults) response.append(res).append(" - ");
             response.delete(response.length() - 2, response.length()).append("]**");
-            response.append("\nChecking for Matches to ").append(mode).append("!");
+            response.append("\nChecking for Matches to ").append(mode == -1 ? "7" : mode).append("!");
             response.append("\nNumber of Matches: ").append(numMatches).append("\n Earned **").append(earnings).append("** BenBux!");
         }
 
@@ -102,7 +102,7 @@ public class Slots extends CooldownCommand
             List<Integer> list = new ArrayList<>();
             for(int i = 0; i < rollResults.length; i++) list.add(rollResults[i]);
 
-            return (int)list.stream().mapToInt(x -> x).filter(r -> r == this.getMode(rollResults)).count();
+            return (int)list.stream().mapToInt(x -> x).filter(r -> r == (this.getMode(rollResults) == -1 ? 7 : this.getMode(rollResults))).count();
         }
 
         private int getMode(int[] arr)
@@ -113,7 +113,7 @@ public class Slots extends CooldownCommand
             int modeCount = 0;
             for(int i : arrMap.values()) if(i > modeCount) modeCount = i;
 
-            for(int i : arrMap.keySet()) if(arrMap.get(i) == modeCount) return i;
+            for(int i : arrMap.keySet()) if(arrMap.get(i) == modeCount && modeCount != 1) return i;
             return -1;
         }
 
