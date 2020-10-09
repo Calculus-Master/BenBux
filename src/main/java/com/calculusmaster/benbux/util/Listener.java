@@ -26,7 +26,7 @@ public class Listener extends ListenerAdapter
         JSONObject userData;
         Random r = new Random();
 
-        if(msg[0].startsWith(Global.PREFIX))
+        if(msg[0].startsWith(Global.PREFIX) && !msg[0].equals(Global.PREFIX))
         {
             msg[0] = msg[0].substring(Global.PREFIX.length()).toLowerCase();
 
