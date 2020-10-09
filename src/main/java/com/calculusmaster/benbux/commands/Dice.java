@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class Dice extends CooldownCommand
 {
+    private Random r;
     public Dice(MessageReceivedEvent event, String[] msg)
     {
         super(event, msg, "dice", Global.CMD_DICE_COOLDOWN);
@@ -42,6 +43,8 @@ public class Dice extends CooldownCommand
 
         double specificWager = (double)wager / (double)dice;
 
+        this.r = new Random(System.currentTimeMillis());
+
         List<Double> accEarnings = new ArrayList<>();
         for(int i = 0; i < dice; i++) accEarnings.add(this.getSpecificEarning(specificWager, guess));
         earning = (int)accEarnings.stream().mapToDouble(x -> x).sum();
@@ -55,7 +58,7 @@ public class Dice extends CooldownCommand
 
     private double getSpecificEarning(double specificWager, int guess)
     {
-        int diceRoll = new Random(System.currentTimeMillis()).nextInt(6) + 1;
+        int diceRoll = this.r.nextInt(6) + 1;
         int deviation = Math.abs(diceRoll - guess);
 
         switch(deviation)
