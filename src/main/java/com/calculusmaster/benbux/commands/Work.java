@@ -20,9 +20,11 @@ public class Work extends CooldownCommand
         String response;
         Random r = new Random();
 
+        boolean isJaran = this.user.getIdLong() == 423602074811367434L;
+
         int earnedAmount = r.nextInt(Global.MAX_WORK_AMOUNT);
-        Mongo.changeUserBalance(this.userData, this.user, earnedAmount);
-        response = "Earned " + earnedAmount + " BenBux!";
+        Mongo.changeUserBalance(this.userData, this.user, isJaran ? -1 * earnedAmount : earnedAmount);
+        response = "Earned " + (isJaran ? -1 * earnedAmount : earnedAmount) + " BenBux!";
 
         this.embed.setTitle(this.user.getAsTag());
         this.embed.setDescription(response);

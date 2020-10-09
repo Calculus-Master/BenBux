@@ -46,16 +46,26 @@ public class Listener extends ListenerAdapter
             }
 
             //1.1: timestamp_restart
-            if(!userData.getString("ver").equals("1.1"))
+            if(!userData.has("timestamp_restart"))
             {
-                System.out.println(userData.getString("username") + " has been updated to version 1.1!");
+                System.out.println(userData.getString("username") + " has been updated to timestamp_restart");
 
                 Mongo.updateTimestamp(user, "restart", event.getMessage().getTimeCreated().minusDays(1));
-                Mongo.BenBuxDB.updateOne(Filters.eq("userID", user.getId()), Updates.set("ver", "1.1"));
 
                 this.onMessageReceived(event);
 		        return;
             }
+            if(!userData.has("timestamp_fight"))
+            {
+                System.out.println(userData.getString("username") + " has been updated to timestamp_fight");
+
+                Mongo.updateTimestamp(user, "fight", event.getMessage().getTimeCreated().minusDays(1));
+
+                this.onMessageReceived(event);
+                return;
+            }
+
+            if(userData.has("ver")) Mongo.BenBuxDB.updateOne(Filters.eq("userID", user.getId()), Updates.unset("ver"));
 
             if(Global.CMD_WORK.contains(msg[0]) && msg.length == 1)
             {
@@ -117,7 +127,11 @@ public class Listener extends ListenerAdapter
             {
                 c = new Slots(event, msg).runCommand();
             }
-            else if(msg[0].toLowerCase().equals(Global.CMD_RESTART))
+            else if(Global.CMD_FIGHT.contains(msg[0]))
+            {
+                c = new Fight(event, msg).runCommand();
+            }
+            else if(Global.CMD_RESTART.contains(msg[0]))
             {
                 c = new Restart(event, msg).runCommand();
             }

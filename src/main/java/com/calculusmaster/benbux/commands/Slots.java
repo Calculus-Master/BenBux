@@ -92,7 +92,7 @@ public class Slots extends CooldownCommand
         {
             int[] rollResults = new int[this.slots];
 
-            for(int i = 0; i < this.slots; i++) rollResults[i] = new Random(System.currentTimeMillis()).nextInt(10);
+            for(int i = 0; i < this.slots; i++) rollResults[i] = new Random().nextInt(10);
 
             return rollResults;
         }
