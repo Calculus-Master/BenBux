@@ -50,7 +50,7 @@ public class Listener extends ListenerAdapter
             {
                 System.out.println(userData.getString("username") + " has been updated to timestamp_restart");
 
-                Mongo.updateTimestamp(user, "restart", event.getMessage().getTimeCreated().minusDays(1));
+                Mongo.updateTimestamp(user, "restart", event.getMessage().getTimeCreated().minusDays(4));
 
                 this.onMessageReceived(event);
 		        return;
