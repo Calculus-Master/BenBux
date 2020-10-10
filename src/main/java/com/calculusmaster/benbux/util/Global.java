@@ -32,13 +32,14 @@ public class Global
     public static final int[] CMD_STEAL_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_PROST_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_DICE_COOLDOWN = {0, 0, 15, 0};
-    public static final int[] CMD_SLOTS_COOLDOWN = {0, 0, 2, 0};
+    public static final int[] CMD_SLOTS_COOLDOWN = {0, 0, 10, 0};
     public static final int[] CMD_FIGHT_COOLDOWN = {0, 2, 0, 0};
     public static final int[] CMD_RESTART_COOLDOWN = {3, 0, 0, 0};
 
     //Config Settings
-    public static final int MAX_WORK_AMOUNT = 500;
-    public static final int MAX_CRIME_AMOUNT = 1000;
+    public static final int MAX_WORK_AMOUNT = 1000;
+    public static final int MAX_CRIME_AMOUNT = 1500;
+    public static final int MAX_FIGHT_AMOUNT = 5000;
 
     public static Color getRandomColor()
     {

@@ -54,15 +54,29 @@ public class Fight extends CooldownCommand
         boolean userWin = new Random().nextInt(2) == 1;
         String[] order = {userWin ? this.user.getAsTag() : opponentData.getString("username"), userWin ? opponentData.getString("username") : this.user.getAsTag()};
 
-        if(userWin) Mongo.changeUserBalance(this.userData, this.user, Integer.parseInt(this.msg[2]) * 2);
+        int winning = new Random(System.currentTimeMillis()).nextInt(Integer.parseInt(this.msg[2]));
+
+        if(winning > Global.MAX_FIGHT_AMOUNT) winning = Global.MAX_FIGHT_AMOUNT;
+
+        String flavorText;
+        String earnText;
+
+        if(userWin)
+        {
+            Mongo.changeUserBalance(this.userData, this.user, winning * 2);
+            Mongo.changeUserBalance(opponentData, opponentData.getString("userID"), winning / -2);
+
+            flavorText = this.user.getAsTag() + " " + chosenFight.replaceAll("\\?", opponentData.getString("username"));
+            earnText = "You earned **" + (winning * 2) + "** BenBux!\n" + opponentData.getString("username") + " lost **" + (winning / 2) + "** BenBux!";
+        }
         else
         {
-            Mongo.changeUserBalance(this.userData, this.user, Integer.parseInt(this.msg[2]) * -1);
-            Mongo.changeUserBalance(opponentData, opponentData.getString("userID"), Integer.parseInt(this.msg[2]));
-        }
+            Mongo.changeUserBalance(this.userData, this.user, winning * -1);
+            Mongo.changeUserBalance(opponentData, opponentData.getString("userID"), winning);
 
-        String flavorText = order[0] + " " + chosenFight.replaceAll("\\?", order[1]);
-        String earnText = userWin ? "You earned " + (2 * Integer.parseInt(this.msg[2])) + " BenBux! " : "You lost " + Integer.parseInt(this.msg[2]) + " BenBux! Instead, " + opponentData.getString("username") + " earned " + Integer.parseInt(this.msg[2]) + " BenBux!";
+            flavorText = opponentData.getString("username") + " " + chosenFight.replaceAll("\\?", this.user.getAsTag());
+            earnText = opponentData.getString("username") + " earned **" + winning + "** BenBux!\nYou lost **" + winning + "** BenBux!";
+        }
 
         this.embed.setTitle(user.getAsTag());
         this.embed.setDescription(flavorText + "!\n" + earnText);

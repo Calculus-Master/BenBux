@@ -1,9 +1,11 @@
 package com.calculusmaster.benbux.commands;
 
+import com.calculusmaster.benbux.commands.util.Command;
 import com.calculusmaster.benbux.commands.util.CooldownCommand;
 import com.calculusmaster.benbux.commands.util.GenericResponses;
 import com.calculusmaster.benbux.util.Global;
 import com.calculusmaster.benbux.util.Mongo;
+import com.calculusmaster.benbux.util.TimeUtils;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.*;
@@ -17,9 +19,31 @@ public class Slots extends CooldownCommand
     {
         super(event, msg, "slots", Global.CMD_SLOTS_COOLDOWN);
 
-        levels.add(new SlotLevel(1, 250, 3000));
+        levels.add(new SlotLevel(1, 250, 5000));
         levels.add(new SlotLevel(2, 1000, 10000));
-        levels.add(new SlotLevel(3, 2500, 50000));
+        levels.add(new SlotLevel(3, 3000, 50000));
+        levels.add(new SlotLevel(4, 5000, 100000));
+        levels.add(new SlotLevel(5, 15000, 250000));
+    }
+
+    @Override
+    public Command runCommand()
+    {
+        if(this.msg[1].toLowerCase().equals("info"))
+        {
+            StringBuilder sb = new StringBuilder();
+            for(SlotLevel l : this.levels) sb.append("**Level ").append(l.level).append(":** Costs **").append(l.cost).append("** BenBux, with **").append(l.slots).append("** Slots and a Jackpot of **").append(l.jackpot).append("** BenBux!\n");
+            this.embed.setDescription(sb.toString());
+            this.embed.setTitle(this.user.getAsTag());
+        }
+        else if(!TimeUtils.isOnCooldown(this.userData, this.event, this.cooldown, this.cmdName))
+        {
+            this.runLogic();
+            if(!this.embed.build().getDescription().equals(GenericResponses.invalid(this.user).build().getDescription())) Mongo.updateTimestamp(this.user, this.cmdName, this.event.getMessage().getTimeCreated());
+        }
+        else this.embed = GenericResponses.onCooldown(this.user, this.userData, this.event, this.cooldown, this.cmdName);
+
+        return this;
     }
 
     @Override
@@ -33,11 +57,7 @@ public class Slots extends CooldownCommand
 
         StringBuilder response = new StringBuilder();
 
-        if(this.msg[1].toLowerCase().equals("info"))
-        {
-            for(SlotLevel l : this.levels) response.append("**Level ").append(l.level).append(":** Costs **").append(l.cost).append("** BenBux, with **").append(l.slots).append("** Slots and a Jackpot of **").append(l.jackpot).append("** BenBux!\n");
-        }
-        else if(!this.msg[1].chars().allMatch(Character::isDigit) || !isValidSlotLevel(Integer.parseInt(this.msg[1])) || this.userData.getInt("benbux") + this.userData.getInt("bank") < this.getSlotLevel(Integer.parseInt(this.msg[1])).cost)
+        if(!this.msg[1].chars().allMatch(Character::isDigit) || !isValidSlotLevel(Integer.parseInt(this.msg[1])) || this.userData.getInt("benbux") + this.userData.getInt("bank") < this.getSlotLevel(Integer.parseInt(this.msg[1])).cost)
         {
             this.embed = GenericResponses.invalid(this.user);
         }

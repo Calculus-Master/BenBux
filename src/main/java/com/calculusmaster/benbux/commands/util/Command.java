@@ -36,4 +36,9 @@ public abstract class Command
         this.embed.setColor(Global.getRandomColor());
         return this.embed.build();
     }
+
+    public int getNetWorth()
+    {
+        return this.userData.getInt("benbux") + this.userData.getInt("bank");
+    }
 }

@@ -45,6 +45,10 @@ public class Steal extends CooldownCommand
             Mongo.changeUserBalance(this.userData, this.user, stolenAmount);
             Mongo.changeUserBalance(victimData, Listener.getUserIDFromMention(this.msg[1]), stolenAmount * -1);
         }
+        else if(victimData.getInt("benbux") < 20)
+        {
+            response = "Cannot rob " + victimData.getString("username") + "!";
+        }
         else
         {
             boolean lost = new Random().nextInt(5) < 3 && this.userData.getInt("benbux") + this.userData.getInt("bank") > 20;

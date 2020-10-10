@@ -25,7 +25,7 @@ public class Crime extends CooldownCommand
         Random r = new Random();
         String response;
         int amount = r.nextInt(Global.MAX_CRIME_AMOUNT) * (r.nextInt(10) < 6 ? -1 : 1);
-        Mongo.changeUserBalance(userData, user, amount);
+        Mongo.changeUserBalance(this.userData, this.user, amount);
 
         this.amount = amount;
         response = (amount < 0 ? " Lost **" : " Earned **") + Math.abs(amount) + "** BenBux!";
